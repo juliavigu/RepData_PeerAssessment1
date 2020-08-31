@@ -1,4 +1,4 @@
-Reproducible Research: Peer Assessment 1
+Reproducible Research: Peer Assessment_1
 ================
 
 This is a report that analyses data from a personal monitoring device of
