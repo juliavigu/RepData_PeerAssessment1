@@ -1,5 +1,5 @@
 ---
-title: "Steps_Project"
+title: "Steps Coursera Project"
 output: html_document
 ---
 
@@ -7,20 +7,73 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Coursera Project: Daily steps
+## This is a report that analyses data from a personal monitoring device of an anonymous individual to better understand daily activity patterns. 
 
-This is a report that analyses data from a personal monitoring device of an anonymous individual to better understand daily activity patterns. 
+### Loading and pre-processing data
+
+We first read the data: 
+```{r}
+dat<-read.csv(unz("activity.zip", "activity.csv"), header=T)
+```
+
+And make the following pre-processing tasks: 
+· Set date variable as class date
+```{r}
+dat$date<-as.Date(dat$date)
+```
+· Second?
+
+
+### Mean number of steps per day
+The histogram shows that the most frequent total number of daily steps ranged between 10 and 11 thousand. We can observe outliers above 15000 and below 10000, and a relatively uniform distribution between those values. 
+```{r histogram}
+totaldailysteps<-tapply(dat$steps, dat$date, FUN=sum)
+hist(totaldailysteps, breaks=30, main="Histogram of Total Daily Steps", xlab="Total daily steps", col="aquamarine4")
+options(scipen=999) #option to not show scientific notation
+options(digits=0) #option for 0 decimal places
+meansteps<-mean(tapply(dat$steps, dat$date, FUN=sum), na.rm=TRUE)
+mediansteps<-median(tapply(dat$steps, dat$date, FUN=sum), na.rm=TRUE)
+```
+
+```{r mean and median}
+
+```
+
+The mean number of steps taken per day is `r meansteps`. 
+And the median number of steps taken per day is `r mediansteps`.
+
+### Average daily activity pattern
+```{r activity pattern}
+#Calculate average steps per daily interval
+averageintervalsteps<-tapply(dat$steps, dat$interval, FUN=mean, na.rm=TRUE)
+dailyintervals<-(dat$interval[1:288])
+#Plot
+plot(dailyintervals, averageintervalsteps, type="l", main= "Average number of steps taken by 5-min daily intervals", col="aquamarine4", xlab="Daily 5-min intervals", ylab="Average number of steps")
+
+#Interval with maximum number of steps on average
+maxsteps<-max(averageintervalsteps)
+meansteps<-mean(averageintervalsteps)
+intervalwithmaxsteps<-dailyintervals[which.max(averageintervalsteps)]
+options(digits=0)
+hour<-intervalwithmaxsteps/60 
+```
+The 5-minute interval that, on average, contains the maximum number of steps is `r intervalwithmaxsteps`. Therefore, the individual took the most steps within a 5-minute interval at `r hour` hours in the afternoon, which amounted to an average of `r maxsteps` steps. This is considerably larger than the `r meansteps` average number of steps taken throughout the day in 5-minute intervals. Maybe he usually went jogging at that time... 
+
+### Imputing missing values
+The presence of missing data for some days may introduce bias into some calculations or summaries of the data. We will impute missing values to assess the potential effect of missing bias.
 
 ```{r}
-summary(cars)
+narows<-sum(is.na(dat))
+
+#Imputing
 ```
+The total number of observations in this dataset is 17568, with `r narows`of those rows having missing values (NAs). 
 
-## Including Plots
+We will use the 5-minute interval mean to fill in the value of "number of steps" when this information is missing for a specific interval. 
 
-You can also embed plots, for example:
+completedat<-
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### Differences in activity patterns between weekdays and weekends
+
+
